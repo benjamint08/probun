@@ -1,5 +1,6 @@
 import {Glob} from "bun";
 import * as path from "node:path";
+import * as os from "os";
 
 interface Route {
     name: string;
@@ -14,8 +15,12 @@ const routes: { [key: string]: Route[] } = {
 
 async function loadRoutes() {
     const allRoutes = new Glob("routes/*.ts");
-    for await (const file of allRoutes.scan(".")) {
-        console.log("Loaded route file:", file)
+    for await (let file of allRoutes.scan(".")) {
+        console.log("Loaded route file:", file);
+        // Windows handles files differently than Linux
+        if(os.platform() === 'win32') {
+            file = file.replace(/\\/g, '/');
+        }
         const splits = file.split("/");
         const rawFileName = splits[splits.length - 1].split(".")[0];
         const filePath = path.join(process.cwd(), 'routes', rawFileName);
