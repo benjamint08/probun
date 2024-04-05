@@ -19,6 +19,12 @@ function Failure(message: string, status: number = 400): Promise<Response> {
     }, status);
 }
 
+function ServerFailure(message: string, status: number = 500): Promise<Response> {
+    return SendJSON({
+        message
+    }, status);
+}
+
 function Redirect(destination: string, status: number = 302): Response {
     return new Response(null, {
         status,
@@ -37,4 +43,4 @@ function Html(html: string, status: number = 200): Response {
     });
 }
 
-export { SendJSON, Success, Failure, Redirect, Html };
+export { SendJSON, Success, Failure, ServerFailure, Redirect, Html };

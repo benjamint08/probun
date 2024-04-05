@@ -3,6 +3,7 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
+import {ServerFailure} from "./helper";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -61,7 +62,7 @@ async function handleRequest(req: Request): Promise<Response> {
             await middleware(req, { customHeaders });
         } catch (error) {
             console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
-            return new Response('Internal Server Error', { status: 500 });
+            return ServerFailure('Internal Server Error');
         }
     }
     const userMethod = req.method.toLowerCase();
@@ -117,7 +118,7 @@ async function handleRequest(req: Request): Promise<Response> {
                 await middleware(req, { customHeaders });
             } catch (error) {
                 console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
-                return new Response('Internal Server Error', { status: 500 });
+                return ServerFailure('Internal Server Error');
             }
         }
         const end = Date.now();
@@ -150,7 +151,7 @@ async function handleRequest(req: Request): Promise<Response> {
             reqMessage += ` ${chalk.bold.red('500')} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
             console.log(reqMessage);
         }
-        return new Response('Internal Server Error', { status: 500 });
+        return ServerFailure('Internal Server Error');
     }
 }
 
