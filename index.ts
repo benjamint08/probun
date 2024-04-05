@@ -1,5 +1,5 @@
 import {Glob} from "bun";
-import * as path from "node:path";
+import * as path from "path/posix";
 import * as os from "os";
 
 interface Route {
