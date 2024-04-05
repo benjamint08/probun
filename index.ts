@@ -1,4 +1,5 @@
 import {Glob} from "bun";
+import * as path from "node:path";
 
 interface Route {
     name: string;
@@ -17,7 +18,8 @@ async function loadRoutes() {
         console.log("Loaded route file:", file)
         const splits = file.split("/");
         const rawFileName = splits[splits.length - 1].split(".")[0];
-        const routeModule = await import(`./routes/${rawFileName}`).then((m) => m.default || m);
+        const filePath = path.join(process.cwd(), 'routes', rawFileName);
+        const routeModule = await import(filePath).then((m) => m.default || m);
         const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
         routes.get.push({ name: rawFileName.split('.')[0], path: file, module: getModule });
