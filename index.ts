@@ -5,6 +5,7 @@ import chalk from "chalk";
 import * as fs from "fs";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
+let log = false;
 
 interface Route {
     name: string;
@@ -89,7 +90,7 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     if (!matchingRoute) {
-        if(isNotProd) {
+        if(log) {
             reqMessage += ` ${chalk.bold.red('404')} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
             console.log(reqMessage);
         }
@@ -101,7 +102,7 @@ async function handleRequest(req: Request): Promise<Response> {
         const response = await matchingRoute(req);
         const end = Date.now();
         response.headers.set('x-response-time', `${end - start}ms`);
-        if(isNotProd) {
+        if(log) {
             let color = 'green';
             if(response.status >= 100 && response.status < 200) {
                 color = 'blue';
@@ -122,7 +123,7 @@ async function handleRequest(req: Request): Promise<Response> {
         return response;
     } catch (error) {
         console.error('Error while processing the requested route: ', error);
-        if(isNotProd) {
+        if(log) {
             reqMessage += ` ${chalk.bold.red('500')} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
             console.log(reqMessage);
         }
@@ -130,16 +131,30 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 }
 
-async function startServer() {
+async function startServer(port: number = 3000, routes: string = "routes", logger: boolean = true) {
     await loadRoutes();
-    let port = 3000;
-    if (Bun.env.PORT) {
-        port = parseInt(Bun.env.PORT);
-    }
     console.log(`Starting server on port ${port}...`);
     Bun.serve({
         fetch: handleRequest
     });
 }
 
-startServer();
+class ProBun {
+    private port: any;
+    private routes: any;
+    private logger: any;
+
+    constructor(props: { port: number, routes: string, logger: boolean }) {
+        const {port, routes, logger} = props;
+        this.port = port;
+        this.routes = routes;
+        this.logger = logger;
+    }
+
+    start() {
+        log = this.logger;
+        startServer();
+    }
+}
+
+export default ProBun;

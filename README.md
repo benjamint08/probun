@@ -3,7 +3,7 @@
 
 ## A better web server for Bun.
 
-To get started, check out the routes folder. This is where you can define your routes.
+Check out usage.ts to get started and also check out the routes folder for an example. This is where you can define your routes.
 You can also add folders to the routes folder to create sub-routes. Go wild- probun loads all of them.
 
 ## Test the post requests in your terminal:
@@ -20,11 +20,6 @@ To install dependencies:
 bun install
 ```
 
-To run:
-
-```bash
-bun run index.ts
-```
 
 # TODO
 - Add support for MongoDB out of the box
