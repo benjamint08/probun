@@ -135,6 +135,7 @@ async function startServer(port: number = 3000, routes: string = "routes", logge
     await loadRoutes();
     console.log(`Starting server on port ${port}...`);
     Bun.serve({
+        port,
         fetch: handleRequest
     });
 }
@@ -153,7 +154,7 @@ class ProBun {
 
     start() {
         log = this.logger;
-        startServer();
+        startServer(this.port, this.routes, this.logger);
     }
 }
 
