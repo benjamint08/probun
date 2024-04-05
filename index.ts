@@ -12,24 +12,16 @@ const routes: { [key: string]: Route[] } = {
 };
 
 async function loadRoutes() {
-    const getRoutes = new Glob("routes/get/*.ts");
-    for await (const file of getRoutes.scan(".")) {
-        console.log("Loaded get route file:", file)
+    const allRoutes = new Glob("routes/*.ts");
+    for await (const file of allRoutes.scan(".")) {
+        console.log("Loaded route file:", file)
         const splits = file.split("/");
         const rawFileName = splits[splits.length - 1].split(".")[0];
-        const routeModule = await import(`./routes/get/${rawFileName}`).then((m) => m.default || m);
-        const module = typeof routeModule === 'object' ? routeModule?.handle : routeModule;
-        routes.get.push({ name: rawFileName.split('.')[0], path: file, module});
-    }
-
-    const postRoutes = new Glob("routes/post/*.ts");
-    for await (const file of postRoutes.scan(".")) {
-        console.log("Loaded post route file:", file)
-        const splits = file.split("/");
-        const rawFileName = splits[splits.length - 1].split(".")[0];
-        const routeModule = await import(`./routes/post/${rawFileName}`).then((m) => m.default || m);
-        const module = typeof routeModule === 'object' ? routeModule?.handle : routeModule;
-        routes.post.push({ name: rawFileName.split('.')[0], path: file, module });
+        const routeModule = await import(`./routes/${rawFileName}`).then((m) => m.default || m);
+        const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
+        const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
+        routes.get.push({ name: rawFileName.split('.')[0], path: file, module: getModule });
+        routes.post.push({ name: rawFileName.split('.')[0], path: file, module: postModule});
     }
 }
 
