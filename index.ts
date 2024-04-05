@@ -16,7 +16,8 @@ interface Route {
 const get = {} as any;
 const post = {} as any;
 
-const middlewares = [] as any;
+const premiddlewares = [] as any;
+const postmiddlewares = [] as any;
 
 async function loadFolder(folder: string) {
     console.log(`${chalk.bold.white(`Loading routes in`)} ${chalk.bold.green(`${folder}`)}...`);
@@ -55,7 +56,7 @@ async function loadRoutes() {
 async function handleRequest(req: Request): Promise<Response> {
     const start = Date.now();
     let customHeaders = new Headers();
-    for(const middleware of middlewares) {
+    for(const middleware of premiddlewares) {
         try {
             await middleware(req, { customHeaders });
         } catch (error) {
@@ -111,6 +112,14 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
         // @ts-ignore
         const response = await matchingRoute(req);
+        for(const middleware of postmiddlewares) {
+            try {
+                await middleware(req, { customHeaders });
+            } catch (error) {
+                console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
+                return new Response('Internal Server Error', { status: 500 });
+            }
+        }
         const end = Date.now();
         response.headers.set('x-response-time', `${end - start}ms`);
         for(const [key, value] of customHeaders) {
@@ -171,9 +180,14 @@ class ProBun {
         startServer(this.port, this.routes, this.logger);
     }
 
-    defineMiddleware(middleware: any) {
-        middlewares.push(middleware);
-        console.log(`Added middleware: ${chalk.bold.green(middleware.name)}`);
+    definePreMiddleware(middleware: any) {
+        premiddlewares.push(middleware);
+        console.log(`Added pre-middleware: ${chalk.bold.green(middleware.name)}`);
+    }
+
+    definePostMiddleware(middleware: any) {
+        postmiddlewares.push(middleware);
+        console.log(`Added post-middleware: ${chalk.bold.green(middleware.name)}`);
     }
 }
 

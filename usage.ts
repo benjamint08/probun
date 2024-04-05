@@ -8,6 +8,6 @@ const server = new ProBun({
     logger: true
 });
 
-server.defineMiddleware(powered);
-server.defineMiddleware(cors);
+server.definePreMiddleware(powered);
+server.definePostMiddleware(cors);
 server.start();

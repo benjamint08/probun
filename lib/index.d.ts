@@ -8,6 +8,7 @@ declare class ProBun {
         logger: boolean;
     });
     start(): void;
-    defineMiddleware(middleware: any): void;
+    definePreMiddleware(middleware: any): void;
+    definePostMiddleware(middleware: any): void;
 }
 export default ProBun;
