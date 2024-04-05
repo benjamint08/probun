@@ -19,11 +19,8 @@ async function loadFolder(folder: string) {
     console.log(`${chalk.bold.white(`Loading routes in`)} ${chalk.bold.green(`${folder}`)}...`);
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
-        // Windows handles files differently than Linux
-        if(os.platform() === 'win32') {
-            file = file.replace(/\\/g, '/');
-            file = file.replace(/routes\//g, '');
-        }
+        file = file.replace(/\\/g, '/');
+        file = file.replace(/routes\//g, '');
         const splits = file.split("/");
         const filePath = path.join(process.cwd(), 'routes', file);
         const routeModule = await import(filePath).then((m) => m.default || m);
