@@ -59,7 +59,7 @@ async function handleRequest(req: Request): Promise<Response> {
     let customHeaders = new Headers();
     for(const middleware of premiddlewares) {
         try {
-            await middleware(req, { customHeaders });
+            await middleware(req, { headers: customHeaders });
         } catch (error) {
             console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
             return ServerFailure('Internal Server Error');
@@ -115,7 +115,7 @@ async function handleRequest(req: Request): Promise<Response> {
         const response = await matchingRoute(req);
         for(const middleware of postmiddlewares) {
             try {
-                await middleware(req, { customHeaders });
+                await middleware(req, { headers: customHeaders });
             } catch (error) {
                 console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
                 return ServerFailure('Internal Server Error');
