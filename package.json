@@ -1,5 +1,6 @@
 {
     "name": "probun",
+    "description": "Powerfull file-based routing for Bun servers",
     "module": "index.ts",
     "version": "0.0.1",
     "main": "./lib/index.js",
@@ -9,6 +10,9 @@
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
+    },
+    "scripts": {
+        "build": "bun utils/build.ts"
     },
     "dependencies": {
         "chalk": "^5.3.0"

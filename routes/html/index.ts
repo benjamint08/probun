@@ -1,4 +1,4 @@
-import { Html } from "../../helper";
+ import { Html } from "../../utils/helper"
 
 export async function GET(req: Request): Promise<Response> {
     // Send HTML with this simple function.
