@@ -1,4 +1,4 @@
-import ProBun from "./index";
+import ProBun from "./lib"
 
 const server = new ProBun({
     port: 3001,
