@@ -1,5 +1,9 @@
+// Every helper function has a way to change the status code of the response.
+import { Failure, SendJSON, Success } from "../helper";
+
 export async function GET(req: Request): Promise<Response> {
-    return new Response("You just did a get request to /!");
+    // Using the helper function "Success" to return a successful response with a message "Everything is working!
+    return Success("Everything is working!");
 }
 
 export async function POST(req: Request): Promise<Response> {
@@ -9,10 +13,15 @@ export async function POST(req: Request): Promise<Response> {
         // If this fails, it will throw an error, but it won't crash the server, because the "handle" function
         // is wrapped in a try-catch block in the main handler function.
         if(body.data === "hi") {
-            return new Response("Hello!");
+            return Success("Hello freind!")
         }
-        return new Response("You just did a post request to / with JSON.");
+
+        // Send JSON with this simple function.
+        return SendJSON({
+            message: "You just sent a post request!"
+        })
     } catch (error) {
-        return new Response("You just did a post request to / with no JSON or invalid JSON.");
+        // This is an easy way to send a failure response with a message. Default status is 400. But its changeable.
+        return Failure("Invalid JSON.")
     }
 }
