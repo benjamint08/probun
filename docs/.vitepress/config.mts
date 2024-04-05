@@ -5,7 +5,9 @@ export default defineConfig({
   title: "Probun",
   description: "Powerfull file-based routing for Bun servers",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
+    search: {
+      provider: "local",
+    },
     nav: [
       { text: 'Home', link: '/' },
     ],

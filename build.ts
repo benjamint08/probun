@@ -2,7 +2,7 @@
 // Script made by @aquapi - https://github.com/bit-js/library/blob/main/build.ts
 // Modified by @benjamint08 for ProBun
 import { existsSync, rmSync } from 'fs';
-import pkg from '../package.json';
+import pkg from './package.json';
 import { $ } from 'bun';
 
 const version = pkg.version.split('.');
@@ -44,4 +44,3 @@ readline.question(`Major version (current: ${major.toString()}): `, (m: any) => 
         });
     });
 });
-

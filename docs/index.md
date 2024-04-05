@@ -13,15 +13,15 @@ hero:
       text: Get Started
       link: /docs/getting-started
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Give a star 🌟
+      link: https://github.com/benjamint08/probun
 
 features:
-  - title: ⚡️ Fast and Simple
-    details: ProBun is a simple and fast file-based routing system for Bun servers.
+  - title: ⚡️ Fast
+    details: ProBun is built on top of Bun.serve, a fast javascript runtime. 
   - title: 📁 File-based Routing
-    details: Use folders and files to define your routes.
-  - title: 📦 Zero Configuration
-    details: No configuration needed, just install and use.
+    details: Make it fun to build your API with file-based routing.
+  - title: 📦 Zero Packages
+    details: ProBun is a zero-dependency package, no need to install any other packages.
 ---
 

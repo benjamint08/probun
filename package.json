@@ -12,7 +12,7 @@
         "typescript": "^5.0.0"
     },
     "scripts": {
-        "build": "bun utils/build.ts"
+        "build": "bun build.ts"
     },
     "dependencies": {
         "chalk": "^5.3.0"
