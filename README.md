@@ -4,6 +4,7 @@
 ## A better web server for Bun.
 
 To get started, check out the routes folder. This is where you can define your routes.
+You can also add folders to the routes folder to create sub-routes. Go wild- probun loads all of them.
 
 ## Test the post requests in your terminal:
 
@@ -26,7 +27,6 @@ bun run index.ts
 ```
 
 # TODO
-- Add support for multi-folders so routes like `/api/v1/test` can be called etc.
 - Add support for MongoDB out of the box
 
 This project was created using `bun init` in bun v1.1.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
