@@ -35,6 +35,7 @@
     "stripInternal": true
   },
   "include": [
-    "index.ts"
+    "index.ts",
+    "helper.ts"
   ]
 }
