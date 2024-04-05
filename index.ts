@@ -15,55 +15,40 @@ interface Route {
 const get = {} as any;
 const post = {} as any;
 
-async function loadRoutes() {
-    const start = Date.now();
-    const allRoutes = new Glob("routes/*.ts");
+async function loadFolder(folder: string) {
+    console.log(`${chalk.bold.white(`Loading routes in`)} ${chalk.bold.green(`${folder}`)}...`);
+    const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         // Windows handles files differently than Linux
         if(os.platform() === 'win32') {
             file = file.replace(/\\/g, '/');
+            file = file.replace(/routes\//g, '');
         }
         const splits = file.split("/");
-        const rawFileName = splits[splits.length - 1].split(".")[0];
-        const filePath = path.join(process.cwd(), 'routes', rawFileName);
+        const filePath = path.join(process.cwd(), 'routes', file);
         const routeModule = await import(filePath).then((m) => m.default || m);
         const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
+        file = file.replace(/.ts/g, '');
         if(getModule) {
-            get[rawFileName] = getModule;
+            get[`${file}`] = getModule;
         }
         if(postModule) {
-            post[rawFileName] = postModule;
+            post[`${file}`] = postModule;
         }
     }
-    // get all folders and subfolders of cwd
-    for (let file of fs.readdirSync(`${process.cwd()}/routes`)) {
-        if(fs.lstatSync(`${process.cwd()}/routes/${file}`).isDirectory()) {
-            const allRoutes = new Glob(`routes/${file}/*.ts`);
-            for (let file of allRoutes.scanSync(".")) {
-                // Windows handles files differently than Linux
-                if(os.platform() === 'win32') {
-                    file = file.replace(/\\/g, '/');
-                    file = file.replace(/routes\//g, '');
-                }
-                const splits = file.split("/");
-                const rawFileName = splits[splits.length - 1].split(".")[0];
-                const filePath = path.join(process.cwd(), 'routes', file);
-                const routeModule = await import(filePath).then((m) => m.default || m);
-                const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
-                const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
-                file = file.replace(/.ts/g, '');
-                if(getModule) {
-                    get[`${file}`] = getModule;
-                }
-                if(postModule) {
-                    post[`${file}`] = postModule;
-                }
-            }
+    const folders = fs.readdirSync(folder);
+    for(const subfolder of folders) {
+        if(subfolder.includes('.')) {
+            continue;
         }
+        await loadFolder(path.join(folder, subfolder));
     }
-    console.log(get)
-    console.log(post)
+}
+
+async function loadRoutes() {
+    const start = Date.now();
+    await loadFolder('routes');
     console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
 }
 
