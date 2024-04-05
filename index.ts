@@ -11,10 +11,8 @@ interface Route {
     module: any;
 }
 
-const routes: Record<string, Route[]> = {
-    get: [],
-    post: []
-};
+const get = {} as any;
+const post = {} as any;
 
 async function loadRoutes() {
     const allRoutes = new Glob("routes/*.ts");
@@ -30,8 +28,12 @@ async function loadRoutes() {
         const routeModule = await import(filePath).then((m) => m.default || m);
         const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
-        routes.get.push({ name: rawFileName.split('.')[0], path: file, module: getModule });
-        routes.post.push({ name: rawFileName.split('.')[0], path: file, module: postModule});
+        if(getModule) {
+            get[rawFileName] = getModule;
+        }
+        if(postModule) {
+            post[rawFileName] = postModule;
+        }
     }
 }
 
@@ -52,15 +54,11 @@ async function handleRequest(req: Request): Promise<Response> {
 
     let matchingRoute: Route | undefined;
 
-    for (const route of routes[userMethod]) {
-        if (isIndex) {
-            if (route.name === 'index') {
-                matchingRoute = route;
-            }
-            continue;
-        }
-        if (route.name === parsedUrl.pathname.replace('/', '')) {
-            matchingRoute = route;
+    if(userMethod === 'get') {
+        if(isIndex) {
+            matchingRoute = get['index'];
+        } else {
+            matchingRoute = get[parsedUrl.pathname.substring(1)];
         }
     }
 
@@ -73,7 +71,8 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     try {
-        const response = await matchingRoute.module(req);
+        // @ts-ignore
+        const response = await matchingRoute(req);
         const end = Date.now();
         response.headers.set('x-response-time', `${end - start}ms`);
         if(isNotProd) {
