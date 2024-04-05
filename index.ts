@@ -63,7 +63,11 @@ async function handleRequest(req: Request): Promise<Response> {
 
 async function startServer() {
     await loadRoutes();
-    console.log("Starting server...");
+    let port = 3000;
+    if (Bun.env.PORT) {
+        port = parseInt(Bun.env.PORT);
+    }
+    console.log(`Starting server on port ${port}...`);
     Bun.serve({
         fetch: handleRequest
     });
