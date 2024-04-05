@@ -16,6 +16,8 @@ interface Route {
 const get = {} as any;
 const post = {} as any;
 
+const middlewares = [] as any;
+
 async function loadFolder(folder: string) {
     console.log(`${chalk.bold.white(`Loading routes in`)} ${chalk.bold.green(`${folder}`)}...`);
     const allRoutes = new Glob(`${folder}/*.ts`);
@@ -52,6 +54,15 @@ async function loadRoutes() {
 
 async function handleRequest(req: Request): Promise<Response> {
     const start = Date.now();
+    let customHeaders = new Headers();
+    for(const middleware of middlewares) {
+        try {
+            await middleware(req, { customHeaders });
+        } catch (error) {
+            console.error(`Error while processing middleware: ${error}`);
+            return new Response('Internal Server Error', { status: 500 });
+        }
+    }
     const userMethod = req.method.toLowerCase();
     const url = req.url;
     let isIndex = false;
@@ -102,6 +113,9 @@ async function handleRequest(req: Request): Promise<Response> {
         const response = await matchingRoute(req);
         const end = Date.now();
         response.headers.set('x-response-time', `${end - start}ms`);
+        for(const [key, value] of customHeaders) {
+            response.headers.set(key, value);
+        }
         if(log) {
             let color = 'green';
             if(response.status >= 100 && response.status < 200) {
@@ -155,6 +169,11 @@ class ProBun {
     start() {
         log = this.logger;
         startServer(this.port, this.routes, this.logger);
+    }
+
+    defineMiddleware(middleware: any) {
+        middlewares.push(middleware);
+        console.log(`Added middleware: ${chalk.bold.green(middleware.name)}`);
     }
 }
 

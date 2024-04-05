@@ -1,4 +1,5 @@
 import ProBun from "./lib"
+import {powered} from "./middleware/powered";
 
 const server = new ProBun({
     port: 3001,
@@ -6,4 +7,5 @@ const server = new ProBun({
     logger: true
 });
 
+server.defineMiddleware(powered);
 server.start();
