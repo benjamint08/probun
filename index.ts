@@ -3,12 +3,12 @@ import {Glob} from "bun";
 interface Route {
     name: string;
     path: string;
-    module: any; // Adjust the type according to your module structure
+    module: any;
 }
 
 const routes: { [key: string]: Route[] } = {
-    get: [], // Initialize get routes as an empty array
-    post: [], // Initialize post routes as an empty array
+    get: [],
+    post: [],
 };
 
 async function loadRoutes() {
@@ -69,7 +69,6 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 }
 
-// Load routes and then start the server
 async function startServer() {
     await loadRoutes();
     console.log("Starting server...");
