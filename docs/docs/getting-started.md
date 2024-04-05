@@ -35,11 +35,12 @@ server.start();
 
 ## File-based Routing
 
+ProBun uses file-based routing to make it easy to create routes. When you create folder and add a file called `index.ts` inside it, it will create a route for that folder. Example:
+
 ```plaintext
 routes/
     index.ts # This will render /
     users/ # This will render /users
         index.ts
-        [id].ts
 ```
 
