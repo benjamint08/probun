@@ -4,6 +4,12 @@
 
 To get started, check out the routes folder. This is where you can define your routes.
 
+## Test the post requests in your terminal:
+
+```bash
+curl -X POST http://localhost:3000/ --data '{"data":"hi"}'
+```
+
 # Installation
 
 To install dependencies:
