@@ -1,4 +1,4 @@
-import { Redirect } from "../../utils/helper";
+import { Redirect } from "../../helper";
 
 export async function GET(req: Request): Promise<Response> {
     // Redirect to a URL with this simple function.

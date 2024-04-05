@@ -3,7 +3,7 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
-import { ServerFailure } from "./utils/helper";
+import { ServerFailure } from "./helper";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;

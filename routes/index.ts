@@ -1,7 +1,12 @@
 // Every helper function has a way to change the status code of the response.
-import { Failure, SendJSON, Success } from "../utils/helper";
+import { Failure, SendJSON, Success } from "../helper";
 
 export async function GET(req: Request): Promise<Response> {
+   const url = new URL(req.url);
+   const params = url.searchParams;
+   const name = params.get("name");
+   console.log(name);
+   
     // Using the helper function "Success" to return a successful response with a message "Everything is working!
     return Success("Everything is working!");
 }

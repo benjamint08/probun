@@ -19,7 +19,7 @@ Bun.build({
     format: 'esm',
     target: 'bun',
     outdir: './lib',
-    entrypoints: ['./index.ts', './helper.ts'],
+    entrypoints: ['./index.ts', './utils/helper.ts'],
     minify: {
         whitespace: true
     },
