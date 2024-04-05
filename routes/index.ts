@@ -12,8 +12,9 @@ export async function POST(req: Request): Promise<Response> {
         // This is how you can access the body of a POST request ^
         // If this fails, it will throw an error, but it won't crash the server, because the "handle" function
         // is wrapped in a try-catch block in the main handler function.
+        // @ts-ignore
         if(body.data === "hi") {
-            return Success("Hello freind!")
+            return Success("Hello friend!")
         }
 
         // Send JSON with this simple function.

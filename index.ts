@@ -59,7 +59,7 @@ async function handleRequest(req: Request): Promise<Response> {
         try {
             await middleware(req, { customHeaders });
         } catch (error) {
-            console.error(`Error while processing middleware: ${error}`);
+            console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
             return new Response('Internal Server Error', { status: 500 });
         }
     }
