@@ -71,6 +71,9 @@ async function handleRequest(req: Request): Promise<Response> {
             matchingRoute = get['index'];
         } else {
             matchingRoute = get[parsedUrl.pathname.substring(1)];
+            if(!matchingRoute) {
+                matchingRoute = get[parsedUrl.pathname.substring(1) + '/index'];
+            }
         }
     }
 
@@ -79,6 +82,9 @@ async function handleRequest(req: Request): Promise<Response> {
             matchingRoute = post['index'];
         } else {
             matchingRoute = post[parsedUrl.pathname.substring(1)];
+            if(!matchingRoute) {
+                matchingRoute = post[parsedUrl.pathname.substring(1) + '/index'];
+            }
         }
     }
 
