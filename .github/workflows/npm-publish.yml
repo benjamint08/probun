@@ -30,7 +30,7 @@ jobs:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
           embed-title: "NPM Publish"
           embed-url: "https://npmjs.com/package/probun"
-          embed-description: "ProBun just got updated on NPM!"
+          embed-description: "ProBun has been updated to v${{ github.ref_name }} on NPM!"
           embed-author-icon-url: "https://raw.githubusercontent.com/npm/logos/master/npm%20square/n-large.png"
           embed-color: 16738657
           embed-author-name: "npm"
