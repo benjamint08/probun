@@ -3,44 +3,67 @@ import chalk from "chalk";
 
 class Mongo {
     private client: MongoClient | null = null;
+    private isConnected: boolean = false;
 
     async connect(url: string): Promise<void> {
         this.client = new MongoClient(url);
         const start = Date.now();
         await this.client.connect().then(() => {
             console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
+            this.isConnected = true;
         });
     }
 
     async getCollection(db: string, col: string): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         return this.client!.db(db).collection(col);
     }
 
     async getDatabase(db: string): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         return this.client!.db(db);
     }
 
     async update(db: string, col: string, query: any, update: any): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         const collection = await this.getCollection(db, col);
         return collection.updateOne(query, update);
     }
 
     async insert(db: string, col: string, data: any): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         const collection = await this.getCollection(db, col);
         return collection.insertOne(data);
     }
 
     async find(db: string, col: string, query: any): Promise<any[]> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         const collection = await this.getCollection(db, col);
         return collection.find(query).toArray();
     }
 
     async findOne(db: string, col: string, query: any): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         const collection = await this.getCollection(db, col);
         return collection.findOne(query);
     }
 
     async delete(db: string, col: string, query: any): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
         const collection = await this.getCollection(db, col);
         return collection.deleteOne(query);
     }
