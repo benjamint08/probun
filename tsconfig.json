@@ -36,6 +36,7 @@
   },
   "include": [
     "index.ts",
-    "helper.ts"
+    "helper.ts",
+    "query.ts"
   ]
 }
