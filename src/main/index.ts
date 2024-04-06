@@ -29,7 +29,9 @@ const premiddlewares = [] as any;
 const postmiddlewares = [] as any;
 
 async function loadFolder(folder: string) {
-    console.log(`${chalk.bold.white(`Loading `)} ${chalk.bold.green(`${folder}`)}...`);
+    if(log) {
+        console.log(`${chalk.bold.white(`Loading `)} ${chalk.bold.green(`${folder}`)}...`);
+    }
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
@@ -97,7 +99,9 @@ async function loadFolder(folder: string) {
 async function loadRoutes() {
     const start = Date.now();
     await loadFolder('routes');
-    console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
+    if(log) {
+        console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
+    }
 }
 
 async function handleRequest(req: Request): Promise<Response> {
@@ -306,12 +310,16 @@ class ProBun {
 
     definePreMiddleware(middleware: any) {
         premiddlewares.push(middleware);
-        console.log(`Added pre-middleware: ${chalk.bold.green(middleware.name)}`);
+        if(this.logger) {
+            console.log(`Added pre-middleware: ${chalk.bold.green(middleware.name)}`);
+        }
     }
 
     definePostMiddleware(middleware: any) {
         postmiddlewares.push(middleware);
-        console.log(`Added post-middleware: ${chalk.bold.green(middleware.name)}`);
+        if(this.logger) {
+            console.log(`Added post-middleware: ${chalk.bold.green(middleware.name)}`);
+        }
     }
 }
 
