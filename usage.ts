@@ -1,4 +1,4 @@
-import ProBun from "./lib"
+import {ProBun} from "./lib"
 import {powered} from "./middleware/powered";
 import {cors} from "./middleware/cors";
 

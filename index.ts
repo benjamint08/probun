@@ -3,7 +3,7 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
-import { ServerFailure } from "./helper";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helper";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -221,4 +221,4 @@ class ProBun {
     }
 }
 
-export default ProBun;
+export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html };
