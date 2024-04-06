@@ -1,4 +1,6 @@
 import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helper";
+import { query } from "./query.ts";
+import { param } from "./param.ts";
 declare class ProBun {
     private port;
     private routes;
@@ -12,4 +14,4 @@ declare class ProBun {
     definePreMiddleware(middleware: any): void;
     definePostMiddleware(middleware: any): void;
 }
-export { ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html };
+export { ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param };
