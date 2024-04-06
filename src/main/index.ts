@@ -7,6 +7,7 @@ import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "../he
 import {query} from "../helpers/query.ts";
 import {param} from "../helpers/param.ts";
 import MongoService from "../instances/mongodb.ts";
+import PgService from "../instances/postgres.ts";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -291,19 +292,24 @@ class ProBun {
     private routes: any;
     private logger: any;
     private mongoUri: any;
+    private pgConfig: any;
 
-    constructor(props: { port: number, routes: string, logger: boolean, mongoUri?: any}) {
-        const {port, routes, logger, mongoUri} = props;
+    constructor(props: { port: number, routes: string, logger: boolean, mongoUri?: any, pgConfig?: any}) {
+        const {port, routes, logger, mongoUri, pgConfig} = props;
         this.port = port;
         this.routes = routes;
         this.logger = logger;
         this.mongoUri = mongoUri;
+        this.pgConfig = pgConfig;
     }
 
     async start() {
         log = this.logger;
         if(this.mongoUri) {
             await MongoService.getInstance().connect(this.mongoUri);
+        }
+        if(this.pgConfig) {
+            await PgService.getInstance().connect(this.pgConfig);
         }
         startServer(this.port, this.routes, this.logger);
     }
@@ -323,4 +329,4 @@ class ProBun {
     }
 }
 
-export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService};
+export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService, PgService};

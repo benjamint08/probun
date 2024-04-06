@@ -15,7 +15,9 @@
     "build": "bun build.ts"
   },
   "dependencies": {
+    "@types/pg": "^8.11.4",
     "chalk": "^5.3.0",
-    "mongodb": "^6.5.0"
+    "mongodb": "^6.5.0",
+    "pg": "^8.11.5"
   }
 }
