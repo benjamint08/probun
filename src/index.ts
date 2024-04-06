@@ -16,17 +16,19 @@ interface Route {
     module: any;
 }
 
+// Methods
 const get = {} as any;
 const post = {} as any;
 const put = {} as any;
 const del = {} as any;
 const patch = {} as any;
 
+// Middlewares
 const premiddlewares = [] as any;
 const postmiddlewares = [] as any;
 
 async function loadFolder(folder: string) {
-    console.log(`${chalk.bold.white(`Loading routes in`)} ${chalk.bold.green(`${folder}`)}...`);
+    console.log(`${chalk.bold.white(`Loading `)} ${chalk.bold.green(`${folder}`)}...`);
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
