@@ -2,7 +2,7 @@
   "name": "probun",
   "description": "Powerful file-based routing for Bun servers",
   "module": "src/main/index.ts",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "./lib/main/index.js",
   "type": "module",
   "devDependencies": {

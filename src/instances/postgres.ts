@@ -5,7 +5,12 @@ class Pg {
     private pool: Pool | null = null;
 
     async connect(config: object): Promise<void> {
-        this.pool = new Pool();
+        this.pool = new Pool({
+            ssl: {
+                rejectUnauthorized: false
+            },
+            ...config
+        });
         const start = Date.now();
         try {
             await this.pool.connect();
