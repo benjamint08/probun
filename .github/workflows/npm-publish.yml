@@ -27,11 +27,11 @@ jobs:
     - name: Alert Discord
       uses: tsickert/discord-webhook@v5.3.0
       with:
-        webhook-url: ${{ secrets.WEBHOOK_URL }}
-        embed-title: "NPM Publish"
-        embed-url: "https://npmjs.com/package/probun"
-        embed-description: "ProBun just got updated on NPM!"
-        embed-color: "#FF6961"
-        embed-author-icon-url: "https://raw.githubusercontent.com/npm/logos/master/npm%20square/n-large.png"
-        embed-author-name: "npm"
-        embed-author-url: "https://npmjs.com"
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          embed-title: "NPM Publish"
+          embed-url: "https://npmjs.com/package/probun"
+          embed-description: "ProBun just got updated on NPM!"
+          embed-author-icon-url: "https://raw.githubusercontent.com/npm/logos/master/npm%20square/n-large.png"
+          embed-color: 16738657
+          embed-author-name: "npm"
+          embed-author-url: "https://npmjs.com"
