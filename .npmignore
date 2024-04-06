@@ -1,13 +1,5 @@
-# Ignore everything in these directories
-routes/
-middleware/
-docs/
-
-# Include only .d.ts files
-*.d.ts
-
-# Exclude all other typescript files
-!**/*.ts
-
-# Ignore bun.lockb
-bun.lockb
+# Ignore all files except README.md, package.json, and lib/ folder
+*
+!README.md
+!package.json
+!lib/

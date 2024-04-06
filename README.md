@@ -17,8 +17,10 @@ curl -X POST http://localhost:3000/ --data '{"data":"hi"}'
 To install dependencies:
 
 ```bash
-bun install
+bun install probun
 ```
+
+Check out the template project [here](https://github.com/benjamint08/probun-example).
 
 
 # TODO
