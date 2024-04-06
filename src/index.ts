@@ -18,6 +18,9 @@ interface Route {
 
 const get = {} as any;
 const post = {} as any;
+const put = {} as any;
+const del = {} as any;
+const patch = {} as any;
 
 const premiddlewares = [] as any;
 const postmiddlewares = [] as any;
@@ -33,6 +36,9 @@ async function loadFolder(folder: string) {
         const routeModule = await import(filePath).then((m) => m.default || m);
         const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
+        const putModule = typeof routeModule === 'object' ? routeModule?.PUT : routeModule;
+        const deleteModule = typeof routeModule === 'object' ? routeModule?.DELETE : routeModule;
+        const patchModule = typeof routeModule === 'object' ? routeModule?.PATCH : routeModule;
         file = file.replace(/.ts/g, '');
         if(getModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -50,6 +56,30 @@ async function loadFolder(folder: string) {
                 file = parts.join('/');
             }
             post[`${file}`] = postModule;
+        }
+        if(putModule) {
+            if(file.includes('[') && file.includes(']')) {
+                const parts = file.split('/');
+                parts[parts.length - 1] = 'params';
+                file = parts.join('/');
+            }
+            put[`${file}`] = putModule;
+        }
+        if(deleteModule) {
+            if(file.includes('[') && file.includes(']')) {
+                const parts = file.split('/');
+                parts[parts.length - 1] = 'params';
+                file = parts.join('/');
+            }
+            del[`${file}`] = deleteModule;
+        }
+        if(patchModule) {
+            if(file.includes('[') && file.includes(']')) {
+                const parts = file.split('/');
+                parts[parts.length - 1] = 'params';
+                file = parts.join('/');
+            }
+            patch[`${file}`] = patchModule;
         }
     }
     const folders = fs.readdirSync(folder);
@@ -129,6 +159,60 @@ async function handleRequest(req: Request): Promise<Response> {
                 let newPath = parts.join('/');
                 newPath = newPath.substring(1);
                 matchingRoute = post[newPath + '/params'];
+            }
+        }
+    }
+
+    if(userMethod === 'put') {
+        if(isIndex) {
+            matchingRoute = put['index'];
+        } else {
+            matchingRoute = put[parsedUrl.pathname.substring(1)];
+            if(!matchingRoute) {
+                matchingRoute = put[parsedUrl.pathname.substring(1) + '/index'];
+            }
+            if(!matchingRoute) {
+                const parts = parsedUrl.pathname.split('/');
+                parts.pop();
+                let newPath = parts.join('/');
+                newPath = newPath.substring(1);
+                matchingRoute = put[newPath + '/params'];
+            }
+        }
+    }
+
+    if(userMethod === 'delete') {
+        if(isIndex) {
+            matchingRoute = del['index'];
+        } else {
+            matchingRoute = del[parsedUrl.pathname.substring(1)];
+            if(!matchingRoute) {
+                matchingRoute = del[parsedUrl.pathname.substring(1) + '/index'];
+            }
+            if(!matchingRoute) {
+                const parts = parsedUrl.pathname.split('/');
+                parts.pop();
+                let newPath = parts.join('/');
+                newPath = newPath.substring(1);
+                matchingRoute = del[newPath + '/params'];
+            }
+        }
+    }
+
+    if(userMethod === 'patch') {
+        if(isIndex) {
+            matchingRoute = patch['index'];
+        } else {
+            matchingRoute = patch[parsedUrl.pathname.substring(1)];
+            if(!matchingRoute) {
+                matchingRoute = patch[parsedUrl.pathname.substring(1) + '/index'];
+            }
+            if(!matchingRoute) {
+                const parts = parsedUrl.pathname.split('/');
+                parts.pop();
+                let newPath = parts.join('/');
+                newPath = newPath.substring(1);
+                matchingRoute = patch[newPath + '/params'];
             }
         }
     }
