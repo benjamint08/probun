@@ -1,4 +1,4 @@
-export async function query(req: Request, query: string): Promise<string | undefined> {
+export async function query(query: string, req: Request,): Promise<string | undefined> {
   // Get all the query parameters from the URL
   const url = new URL(req.url);
   const params = url.searchParams;
