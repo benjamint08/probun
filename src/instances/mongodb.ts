@@ -4,13 +4,11 @@ import chalk from "chalk";
 class Mongo {
     private client: MongoClient | null = null;
 
-    async connect(url: string, log: boolean = false): Promise<void> {
+    async connect(url: string): Promise<void> {
         this.client = new MongoClient(url);
         const start = Date.now();
         await this.client.connect().then(() => {
-            if (log) {
-                console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
-            }
+            console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
         });
     }
 

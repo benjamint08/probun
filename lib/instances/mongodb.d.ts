@@ -1,6 +1,6 @@
 declare class Mongo {
     private client;
-    connect(url: string, log?: boolean): Promise<void>;
+    connect(url: string): Promise<void>;
     getCollection(db: string, col: string): Promise<any>;
     getDatabase(db: string): Promise<any>;
     update(db: string, col: string, query: any, update: any): Promise<any>;

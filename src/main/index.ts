@@ -303,7 +303,7 @@ class ProBun {
     async start() {
         log = this.logger;
         if(this.mongoUri) {
-            await MongoService.getInstance().connect(this.mongoUri, this.logger);
+            await MongoService.getInstance().connect(this.mongoUri);
         }
         startServer(this.port, this.routes, this.logger);
     }
