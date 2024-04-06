@@ -27,6 +27,7 @@ Bun.build({
 });
 
 await $`bun x tsc`;
+await $`mv lib/index.d.ts lib/src/index.d.ts`;
 
 const readline = require('readline').createInterface({
     input: process.stdin,
