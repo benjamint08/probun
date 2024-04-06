@@ -15,7 +15,7 @@ Bun.build({
     format: 'esm',
     target: 'bun',
     outdir: './lib',
-    entrypoints: ['./src'],
+    entrypoints: ['./src/main'],
     minify: {
         whitespace: true
     },
@@ -23,7 +23,6 @@ Bun.build({
 });
 
 await $`bun x tsc`;
-await $`mv lib/index.d.ts lib/src/index.d.ts`;
 
 const { values, positionals } = parseArgs({
     args: Bun.argv,
@@ -39,4 +38,5 @@ const { values, positionals } = parseArgs({
 if(values.version) {
     pkg.version = values.version;
     Bun.write('package.json', JSON.stringify(pkg, null, 2));
+    console.log(`Updated version to ${values.version}`);
 }

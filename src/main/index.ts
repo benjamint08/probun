@@ -3,9 +3,10 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
-import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helpers/helper.ts";
-import {query} from "./helpers/query.ts";
-import {param} from "./helpers/param.ts";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "../helpers/helper.ts";
+import {query} from "../helpers/query.ts";
+import {param} from "../helpers/param.ts";
+import MongoService from "../instances/mongodb.ts";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -252,7 +253,7 @@ async function handleRequest(req: Request): Promise<Response> {
             } else if(response.status >= 300 && response.status < 400) {
                 color = 'yellow';
             } else if(response.status >= 400 && response.status < 500) {
-                color = 'purple';
+                color = 'magenta';
             } else if(response.status >= 500) {
                 color = 'red';
             }
@@ -285,16 +286,21 @@ class ProBun {
     private port: any;
     private routes: any;
     private logger: any;
+    private mongoUri: any;
 
-    constructor(props: { port: number, routes: string, logger: boolean }) {
-        const {port, routes, logger} = props;
+    constructor(props: { port: number, routes: string, logger: boolean, mongoUri?: any}) {
+        const {port, routes, logger, mongoUri} = props;
         this.port = port;
         this.routes = routes;
         this.logger = logger;
+        this.mongoUri = mongoUri;
     }
 
-    start() {
+    async start() {
         log = this.logger;
+        if(this.mongoUri) {
+            await MongoService.getInstance().connect(this.mongoUri);
+        }
         startServer(this.port, this.routes, this.logger);
     }
 
@@ -309,4 +315,4 @@ class ProBun {
     }
 }
 
-export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param };
+export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService};
