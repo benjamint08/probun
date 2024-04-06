@@ -1,20 +1,20 @@
 {
-    "name": "probun",
-    "description": "Powerful file-based routing for Bun servers",
-    "module": "src/index.ts",
-    "version": "0.1.0",
-    "main": "./lib/src/index.js",
-    "type": "module",
-    "devDependencies": {
-        "@types/bun": "latest"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "scripts": {
-        "build": "bun build.ts"
-    },
-    "dependencies": {
-        "chalk": "^5.3.0"
-    }
+  "name": "probun",
+  "description": "Powerful file-based routing for Bun servers",
+  "module": "src/index.ts",
+  "version": "0.1.0",
+  "main": "./lib/src/index.js",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "bun build.ts"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  }
 }
