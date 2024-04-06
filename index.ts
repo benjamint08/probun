@@ -33,9 +33,20 @@ async function loadFolder(folder: string) {
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
         file = file.replace(/.ts/g, '');
         if(getModule) {
+            if(file.includes('[') && file.includes(']')) {
+                const parts = file.split('/');
+                parts[parts.length - 1] = 'params';
+                file = parts.join('/');
+            }
             get[`${file}`] = getModule;
         }
+
         if(postModule) {
+            if(file.includes('[') && file.includes(']')) {
+                const parts = file.split('/');
+                parts[parts.length - 1] = 'params';
+                file = parts.join('/');
+            }
             post[`${file}`] = postModule;
         }
     }
@@ -78,6 +89,10 @@ async function handleRequest(req: Request): Promise<Response> {
         isIndex = true;
     }
 
+    if(parsedUrl.pathname.endsWith('/')) {
+        parsedUrl.pathname = parsedUrl.pathname.substring(0, parsedUrl.pathname.length - 1);
+    }
+
     let matchingRoute: Route | undefined;
 
     if(userMethod === 'get') {
@@ -87,6 +102,13 @@ async function handleRequest(req: Request): Promise<Response> {
             matchingRoute = get[parsedUrl.pathname.substring(1)];
             if(!matchingRoute) {
                 matchingRoute = get[parsedUrl.pathname.substring(1) + '/index'];
+            }
+            if(!matchingRoute) {
+                const parts = parsedUrl.pathname.split('/');
+                parts.pop();
+                let newPath = parts.join('/');
+                newPath = newPath.substring(1);
+                matchingRoute = get[newPath + '/params'];
             }
         }
     }
@@ -98,6 +120,13 @@ async function handleRequest(req: Request): Promise<Response> {
             matchingRoute = post[parsedUrl.pathname.substring(1)];
             if(!matchingRoute) {
                 matchingRoute = post[parsedUrl.pathname.substring(1) + '/index'];
+            }
+            if(!matchingRoute) {
+                const parts = parsedUrl.pathname.split('/');
+                parts.pop();
+                let newPath = parts.join('/');
+                newPath = newPath.substring(1);
+                matchingRoute = post[newPath + '/params'];
             }
         }
     }
