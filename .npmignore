@@ -1,5 +1,10 @@
+# Ignore everything in these directories
 routes/
 middleware/
 docs/
-*.ts
+
+# Ignore all .ts files except for those ending with .d.ts
+!**.d.ts
+
+# Ignore bun.lockb
 bun.lockb
