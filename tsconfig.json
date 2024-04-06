@@ -35,9 +35,6 @@
     "stripInternal": true
   },
   "include": [
-    "index.ts",
-    "helper.ts",
-    "query.ts",
-    "param.ts"
+    "src/**/*",
   ]
 }

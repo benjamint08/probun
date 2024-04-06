@@ -3,9 +3,9 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
-import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helper";
-import {query} from "./query.ts";
-import {param} from "./param.ts";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helpers/helper.ts";
+import {query} from "./helpers/query.ts";
+import {param} from "./helpers/param.ts";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;

@@ -1,6 +1,6 @@
-import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helper";
-import { query } from "./query.ts";
-import { param } from "./param.ts";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "./helpers/helper.ts";
+import { query } from "./helpers/query.ts";
+import { param } from "./helpers/param.ts";
 declare class ProBun {
     private port;
     private routes;
