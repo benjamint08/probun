@@ -1,5 +1,5 @@
 # probun
-### This is a work in progress! Expect many new features.
+# ⚠️ This is a work in progress! Expect many new features. ⚠️
 
 ## A better web server for Bun.
 
