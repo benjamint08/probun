@@ -1,7 +1,7 @@
 # probun
 # ⚠️ This is a work in progress! Expect many new features. ⚠️
 
-## Official [ProBun Docs](https://probun.p3pr.co)
+## Official [ProBun Docs](https://probun.dev)
 
 ## A better web server for Bun.
 
