@@ -8,6 +8,7 @@ import {query} from "../helpers/query.ts";
 import {param} from "../helpers/param.ts";
 import MongoService from "../instances/mongodb.ts";
 import PgService from "../instances/postgres.ts";
+import { version } from "../../package.json"
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -280,7 +281,8 @@ async function handleRequest(req: Request): Promise<Response> {
 
 async function startServer(port: number = 3000, routes: string = "routes", logger: boolean = true) {
     await loadRoutes();
-    console.log(`Starting server on port ${port}...`);
+    console.log(chalk.bold.white(`Using ProBun ${chalk.bold.green(`v${version}`)}`));
+    console.log(chalk.bold.white(`Starting server on port ${chalk.bold.cyan(`${port}...`)}`));
     Bun.serve({
         port,
         fetch: handleRequest
