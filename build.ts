@@ -10,20 +10,6 @@ import {parseArgs} from "util";
 const dir = './lib';
 if (existsSync(dir)) rmSync(dir, { recursive: true });
 
-// Build source files
-Bun.build({
-    format: 'esm',
-    target: 'bun',
-    outdir: './lib',
-    entrypoints: ['./src/main'],
-    minify: {
-        whitespace: true
-    },
-    external: Object.keys(pkg.dependencies)
-});
-
-await $`bun x tsc`;
-
 const { values, positionals } = parseArgs({
     args: Bun.argv,
     options: {
@@ -40,3 +26,17 @@ if(values.version) {
     Bun.write('package.json', JSON.stringify(pkg, null, 2));
     console.log(`Updated version to ${values.version}`);
 }
+
+// Build source files
+Bun.build({
+    format: 'esm',
+    target: 'bun',
+    outdir: './lib',
+    entrypoints: ['./src/main'],
+    minify: {
+        whitespace: true
+    },
+    external: Object.keys(pkg.dependencies)
+});
+
+await $`bun x tsc`;

@@ -20,11 +20,7 @@ interface Route {
 }
 
 // Methods
-const get = {} as any;
-const post = {} as any;
-const put = {} as any;
-const del = {} as any;
-const patch = {} as any;
+const methods = {} as any;
 
 // Middlewares
 const premiddlewares = [] as any;
@@ -53,7 +49,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            get[`${file}`] = getModule;
+            methods.get[`${file}`] = getModule;
         }
 
         if(postModule) {
@@ -62,7 +58,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            post[`${file}`] = postModule;
+            methods.post[`${file}`] = postModule;
         }
         if(putModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -70,7 +66,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            put[`${file}`] = putModule;
+            methods.put[`${file}`] = putModule;
         }
         if(deleteModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -78,7 +74,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            del[`${file}`] = deleteModule;
+            methods.delete[`${file}`] = deleteModule;
         }
         if(patchModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -86,7 +82,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            patch[`${file}`] = patchModule;
+            methods.patch[`${file}`] = patchModule;
         }
     }
     const folders = fs.readdirSync(folder);
@@ -136,93 +132,19 @@ async function handleRequest(req: Request): Promise<Response> {
 
     let matchingRoute: Route | undefined;
 
-    if(userMethod === 'get') {
-        if(isIndex) {
-            matchingRoute = get['index'];
-        } else {
-            matchingRoute = get[parsedUrl.pathname.substring(1)];
-            if(!matchingRoute) {
-                matchingRoute = get[parsedUrl.pathname.substring(1) + '/index'];
-            }
-            if(!matchingRoute) {
-                const parts = parsedUrl.pathname.split('/');
-                parts.pop();
-                let newPath = parts.join('/');
-                newPath = newPath.substring(1);
-                matchingRoute = get[newPath + '/params'];
-            }
+    if(isIndex) {
+        matchingRoute = methods[userMethod]['index'];
+    } else {
+        matchingRoute = methods[userMethod][parsedUrl.pathname.substring(1)];
+        if(!matchingRoute) {
+            matchingRoute = methods[userMethod][parsedUrl.pathname.substring(1) + '/index'];
         }
-    }
-
-    if(userMethod === 'post') {
-        if(isIndex) {
-            matchingRoute = post['index'];
-        } else {
-            matchingRoute = post[parsedUrl.pathname.substring(1)];
-            if(!matchingRoute) {
-                matchingRoute = post[parsedUrl.pathname.substring(1) + '/index'];
-            }
-            if(!matchingRoute) {
-                const parts = parsedUrl.pathname.split('/');
-                parts.pop();
-                let newPath = parts.join('/');
-                newPath = newPath.substring(1);
-                matchingRoute = post[newPath + '/params'];
-            }
-        }
-    }
-
-    if(userMethod === 'put') {
-        if(isIndex) {
-            matchingRoute = put['index'];
-        } else {
-            matchingRoute = put[parsedUrl.pathname.substring(1)];
-            if(!matchingRoute) {
-                matchingRoute = put[parsedUrl.pathname.substring(1) + '/index'];
-            }
-            if(!matchingRoute) {
-                const parts = parsedUrl.pathname.split('/');
-                parts.pop();
-                let newPath = parts.join('/');
-                newPath = newPath.substring(1);
-                matchingRoute = put[newPath + '/params'];
-            }
-        }
-    }
-
-    if(userMethod === 'delete') {
-        if(isIndex) {
-            matchingRoute = del['index'];
-        } else {
-            matchingRoute = del[parsedUrl.pathname.substring(1)];
-            if(!matchingRoute) {
-                matchingRoute = del[parsedUrl.pathname.substring(1) + '/index'];
-            }
-            if(!matchingRoute) {
-                const parts = parsedUrl.pathname.split('/');
-                parts.pop();
-                let newPath = parts.join('/');
-                newPath = newPath.substring(1);
-                matchingRoute = del[newPath + '/params'];
-            }
-        }
-    }
-
-    if(userMethod === 'patch') {
-        if(isIndex) {
-            matchingRoute = patch['index'];
-        } else {
-            matchingRoute = patch[parsedUrl.pathname.substring(1)];
-            if(!matchingRoute) {
-                matchingRoute = patch[parsedUrl.pathname.substring(1) + '/index'];
-            }
-            if(!matchingRoute) {
-                const parts = parsedUrl.pathname.split('/');
-                parts.pop();
-                let newPath = parts.join('/');
-                newPath = newPath.substring(1);
-                matchingRoute = patch[newPath + '/params'];
-            }
+        if(!matchingRoute) {
+            const parts = parsedUrl.pathname.split('/');
+            parts.pop();
+            let newPath = parts.join('/');
+            newPath = newPath.substring(1);
+            matchingRoute = methods[userMethod][newPath + '/params'];
         }
     }
 
