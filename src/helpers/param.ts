@@ -8,6 +8,7 @@ export async function param(req: Request): Promise<string | null>{
     if (!id) {
         return null
     } else {
-        return id
+        // We make sure to remove query params ?...
+        return id.replace(/\?.*/, "");
     }
 }
