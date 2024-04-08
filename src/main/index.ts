@@ -37,9 +37,9 @@ async function loadFolder(folder: string) {
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
-        file = file.replace(/routes\//g, '');
+        file = file.split('/')[file.split('/').length - 1];
         const splits = file.split("/");
-        const filePath = path.join(process.cwd(), 'routes', file);
+        const filePath = path.join(process.cwd(), folder, file);
         const routeModule = await import(filePath).then((m) => m.default || m);
         const getModule = typeof routeModule === 'object' ? routeModule?.GET : routeModule;
         const postModule = typeof routeModule === 'object' ? routeModule?.POST : routeModule;
@@ -98,9 +98,9 @@ async function loadFolder(folder: string) {
     }
 }
 
-async function loadRoutes() {
+async function loadRoutes(folder: string) {
     const start = Date.now();
-    await loadFolder('routes');
+    await loadFolder(folder);
     if(log) {
         console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
     }
@@ -280,7 +280,7 @@ async function handleRequest(req: Request): Promise<Response> {
 }
 
 async function startServer(port: number = 3000, routes: string = "routes", logger: boolean = true) {
-    await loadRoutes();
+    await loadRoutes(routes);
     console.log(chalk.bold.white(`Using ProBun ${chalk.bold.green(`v${version}`)}`));
     console.log(chalk.bold.white(`Starting server on port ${chalk.bold.cyan(`${port}...`)}`));
     Bun.serve({

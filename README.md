@@ -23,6 +23,6 @@ bun install probun
 ```
 
 # TODO
-- Add support for MongoDB out of the box
+- Nothing planned yet
 
 This project was created using `bun init` in bun v1.1.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
