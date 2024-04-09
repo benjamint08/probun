@@ -20,7 +20,13 @@ interface Route {
 }
 
 // Methods
-const methods = {} as any;
+const methods = {
+    get: {} as any,
+    post: {} as any,
+    put: {} as any,
+    delete: {} as any,
+    patch: {} as any,
+} as any;
 
 // Middlewares
 const premiddlewares = [] as any;
@@ -28,7 +34,7 @@ const postmiddlewares = [] as any;
 
 async function loadFolder(folder: string) {
     if(log) {
-        console.log(`${chalk.bold.white(`Loading `)} ${chalk.bold.green(`${folder}`)}...`);
+        console.log(`${chalk.bold.white(`Loading`)} ${chalk.bold.green(`${folder}`)}...`);
     }
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
