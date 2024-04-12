@@ -39,7 +39,7 @@ async function loadFolder(folder: string) {
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
-        const realfile = file.split('/').slice(1).join('/').replace(/.ts/g, '');
+        let realfile = file.split('/').slice(1).join('/').replace(/.ts/g, '');
         file = file.split('/')[file.split('/').length - 1];
         const splits = file.split("/");
         const filePath = path.join(process.cwd(), folder, file);
@@ -52,42 +52,42 @@ async function loadFolder(folder: string) {
         file = file.replace(/.ts/g, '');
         if(getModule) {
             if(file.includes('[') && file.includes(']')) {
-                const parts = file.split('/');
+                const parts = realfile.split('/');
                 parts[parts.length - 1] = 'params';
-                file = parts.join('/');
+                realfile = parts.join('/');
             }
             methods.get[`${realfile}`] = getModule;
         }
 
         if(postModule) {
             if(file.includes('[') && file.includes(']')) {
-                const parts = file.split('/');
+                const parts = realfile.split('/');
                 parts[parts.length - 1] = 'params';
-                file = parts.join('/');
+                realfile = parts.join('/');
             }
             methods.post[`${realfile}`] = postModule;
         }
         if(putModule) {
             if(file.includes('[') && file.includes(']')) {
-                const parts = file.split('/');
+                const parts = realfile.split('/');
                 parts[parts.length - 1] = 'params';
-                file = parts.join('/');
+                realfile = parts.join('/');
             }
             methods.put[`${realfile}`] = putModule;
         }
         if(deleteModule) {
             if(file.includes('[') && file.includes(']')) {
-                const parts = file.split('/');
+                const parts = realfile.split('/');
                 parts[parts.length - 1] = 'params';
-                file = parts.join('/');
+                realfile = parts.join('/');
             }
             methods.delete[`${realfile}`] = deleteModule;
         }
         if(patchModule) {
             if(file.includes('[') && file.includes(']')) {
-                const parts = file.split('/');
+                const parts = realfile.split('/');
                 parts[parts.length - 1] = 'params';
-                file = parts.join('/');
+                realfile = parts.join('/');
             }
             methods.patch[`${realfile}`] = patchModule;
         }
