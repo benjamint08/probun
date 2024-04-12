@@ -1,6 +1,6 @@
 declare function SendJSON(json: any, status?: number): Promise<Response>;
 declare function Success(message: string, status?: number): Promise<Response>;
-declare function SendFile(filePath: string, status?: number): Promise<Response>;
+declare function SendFile(filePath: any, status?: number): Promise<Response>;
 declare function Failure(message: string, status?: number): Promise<Response>;
 declare function ServerFailure(message: string, status?: number): Promise<Response>;
 declare function Redirect(destination: string, status?: number): Response;
