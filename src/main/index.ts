@@ -3,7 +3,7 @@ import * as path from "path/posix";
 import * as os from "os";
 import chalk from "chalk";
 import * as fs from "fs";
-import { SendJSON, Success, Failure, ServerFailure, Redirect, Html } from "../helpers/helper.ts";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html, SendFile } from "../helpers/helper.ts";
 import {query} from "../helpers/query.ts";
 import {param} from "../helpers/param.ts";
 import MongoService from "../instances/mongodb.ts";
@@ -259,4 +259,4 @@ class ProBun {
     }
 }
 
-export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService, PgService};
+export {ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService, PgService, SendFile};
