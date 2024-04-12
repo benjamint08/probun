@@ -104,7 +104,6 @@ async function loadFolder(folder: string) {
 async function loadRoutes(folder: string) {
     const start = Date.now();
     await loadFolder(folder);
-    console.log(methods);
     if(log) {
         console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
     }

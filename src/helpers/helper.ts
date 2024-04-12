@@ -16,14 +16,16 @@ function Success(message: string, status: number = 200): Promise<Response> {
 
 }
 
-async function SendFile(filePath: string, status: number = 200): Promise<Response> {
-    // get the file
-    const file = await Bun.file(path.join(__dirname, filePath));
-    // return the file
+async function SendFile(filePath: any, status: number = 200): Promise<Response> {
+    const file = Bun.file(filePath);
+    let rawFileName = path.basename(filePath);
+    rawFileName = rawFileName.replace(/ /g, "_");
+    rawFileName = rawFileName.replace(/\\/g, "_");
+    rawFileName = rawFileName.split("_")[rawFileName.split("_").length - 1];
     return new Response(file, {
         headers: {
             "Content-Type": "application/octet-stream",
-            "Content-Disposition": `attachment; filename="${filePath.split("/").pop()}"`,
+            "Content-Disposition": `attachment; filename="${rawFileName}"`,
         },
         status
     });
