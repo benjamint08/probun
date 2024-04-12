@@ -8,7 +8,9 @@ import {query} from "../helpers/query.ts";
 import {param} from "../helpers/param.ts";
 import MongoService from "../instances/mongodb.ts";
 import PgService from "../instances/postgres.ts";
-import { version } from "../../package.json"
+import { version } from "../../package.json";
+
+let globalFolder = "";
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 let log = false;
@@ -39,7 +41,7 @@ async function loadFolder(folder: string) {
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
-        let realfile = file.split('/').slice(1).join('/').replace(/.ts/g, '');
+        let realfile = file.replace(globalFolder + "/", '').replace(/.ts/g, '');
         file = file.split('/')[file.split('/').length - 1];
         const splits = file.split("/");
         const filePath = path.join(process.cwd(), folder, file);
@@ -242,6 +244,7 @@ class ProBun {
         if(this.pgConfig) {
             await PgService.getInstance().connect(this.pgConfig);
         }
+        globalFolder = this.routes;
         startServer(this.port, this.routes, this.logger);
     }
 
