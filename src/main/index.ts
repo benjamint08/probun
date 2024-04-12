@@ -39,6 +39,7 @@ async function loadFolder(folder: string) {
     const allRoutes = new Glob(`${folder}/*.ts`);
     for await (let file of allRoutes.scan(".")) {
         file = file.replace(/\\/g, '/');
+        const realfile = file.split('/').slice(1).join('/').replace(/.ts/g, '');
         file = file.split('/')[file.split('/').length - 1];
         const splits = file.split("/");
         const filePath = path.join(process.cwd(), folder, file);
@@ -55,7 +56,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            methods.get[`${file}`] = getModule;
+            methods.get[`${realfile}`] = getModule;
         }
 
         if(postModule) {
@@ -64,7 +65,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            methods.post[`${file}`] = postModule;
+            methods.post[`${realfile}`] = postModule;
         }
         if(putModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -72,7 +73,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            methods.put[`${file}`] = putModule;
+            methods.put[`${realfile}`] = putModule;
         }
         if(deleteModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -80,7 +81,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            methods.delete[`${file}`] = deleteModule;
+            methods.delete[`${realfile}`] = deleteModule;
         }
         if(patchModule) {
             if(file.includes('[') && file.includes(']')) {
@@ -88,7 +89,7 @@ async function loadFolder(folder: string) {
                 parts[parts.length - 1] = 'params';
                 file = parts.join('/');
             }
-            methods.patch[`${file}`] = patchModule;
+            methods.patch[`${realfile}`] = patchModule;
         }
     }
     const folders = fs.readdirSync(folder);
@@ -103,6 +104,7 @@ async function loadFolder(folder: string) {
 async function loadRoutes(folder: string) {
     const start = Date.now();
     await loadFolder(folder);
+    console.log(methods);
     if(log) {
         console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
     }
