@@ -1,5 +1,8 @@
 # ProBun
 
+> [!WARNING]
+> ProBun is a work in progress, expect many new features and changes in the future.
+
 ProBun, a better web server for Bun. ProBun aims to enhance your web development experience by providing a more efficient and flexible server solution.
 
 ## Features
@@ -20,6 +23,3 @@ export async function GET(req: Request): Promise<Response> {
 ## Getting Started
 
 To get started with ProBun, we recommend you to read the [installation guide](https://probun.dev/docs/getting-started.html)
-
-> [!WARNING]
-> ProBun is a work in progress, expect many new features and changes in the future.
