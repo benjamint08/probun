@@ -7,7 +7,7 @@ ProBun, a better web server for Bun. ProBun aims to enhance your web development
 
 ## Features
 
-- **Fast**: ProBun is built on top of Bun.server, a fast and efficient web server created by the Bun team. ProBun aims to be over `494.31%` better than Express. [view benchmark](https://probun.dev/docs/benchmark.html)
+- **Fast**: ProBun is built on top of Bun.serve, a fast and efficient web server created by the Bun team. ProBun aims to be over `494.31%` better than Express. [view benchmark](https://probun.dev/docs/benchmark.html)
 - **TypeScript Support**: ProBun is written in TypeScript, making it easier to write type-safe code.
 - **File-based Routing**: ProBun uses the file system as the routing mechanism, making it easier to manage your routes. Example:
 
