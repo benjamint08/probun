@@ -1,6 +1,6 @@
 import * as path from "path/posix";
 
-async function SendJSON(json: any, status: number = 200): Promise<Response> {
+async function SendJSON(json: object, status: number = 200): Promise<Response> {
     return new Response(JSON.stringify(json), {
         headers: {
             "Content-Type": "application/json"
