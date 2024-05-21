@@ -14,6 +14,7 @@ class Pg {
         });
         const start = Date.now();
         try {
+            console.log(chalk.bold.whiteBright(`Connecting to PostgreSQL...`));
             await this.pool.connect();
             console.log(chalk.bold.whiteBright(`PostgreSQL connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
             this.isConnected = true;
