@@ -8,6 +8,7 @@ class Mongo {
     async connect(url: string): Promise<void> {
         this.client = new MongoClient(url);
         const start = Date.now();
+        console.log(chalk.bold.whiteBright(`Connecting to MongoDB...`));
         await this.client.connect().then(() => {
             console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
             this.isConnected = true;

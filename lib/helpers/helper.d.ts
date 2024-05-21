@@ -1,4 +1,4 @@
-declare function SendJSON(json: any, status?: number): Promise<Response>;
+declare function SendJSON(json: object, status?: number): Promise<Response>;
 declare function Success(message: string, status?: number): Promise<Response>;
 declare function SendFile(filePath: any, status?: number): Promise<Response>;
 declare function Failure(message: string, status?: number): Promise<Response>;
