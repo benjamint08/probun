@@ -6,7 +6,8 @@ export async function json(req: Request): Promise<Object>{
     let body: any = {};
     bodyString.split("&").forEach((pair) => {
         const [key, value] = pair.split("=");
-        body[key] = value;
+        // decode value because it is URL encoded
+        body[key] = decodeURIComponent(value);
     });
     return body;
 }
