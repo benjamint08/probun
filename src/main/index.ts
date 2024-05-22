@@ -168,7 +168,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
   // options request
     if (userMethod === "options") {
-        for (const middleware of postmiddlewares) {
+        for (const middleware of premiddlewares) {
           try {
             await middleware(req, { headers: customHeaders });
           } catch (error) {
