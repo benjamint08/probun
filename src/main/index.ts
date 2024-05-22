@@ -16,6 +16,7 @@ import { param } from "../helpers/param.ts";
 import { version } from "../../package.json";
 import MongoService from "../instances/mongodb.ts";
 import PgService from "../instances/postgres.ts";
+import {json} from "../helpers/json.ts";
 
 let globalFolder = "";
 
@@ -347,4 +348,5 @@ export {
   MongoService,
   PgService,
   SendFile,
+  json
 };
