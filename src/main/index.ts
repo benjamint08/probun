@@ -35,7 +35,6 @@ const methods = {
   put: {} as any,
   delete: {} as any,
   patch: {} as any,
-  options: {} as any,
 } as any;
 
 // Middlewares
@@ -66,8 +65,6 @@ async function loadFolder(folder: string) {
       typeof routeModule === "object" ? routeModule?.DELETE : routeModule;
     const patchModule =
       typeof routeModule === "object" ? routeModule?.PATCH : routeModule;
-    const optionsModule =
-        typeof routeModule === "object" ? routeModule?.OPTIONS : routeModule;
     file = file.replace(/.ts/g, "");
     if (getModule) {
       if (file.includes("[") && file.includes("]")) {
@@ -109,14 +106,6 @@ async function loadFolder(folder: string) {
         realfile = parts.join("/");
       }
       methods.patch[`${realfile}`] = patchModule;
-    }
-    if (optionsModule) {
-      if (file.includes("[") && file.includes("]")) {
-        const parts = realfile.split("/");
-        parts[parts.length - 1] = "params";
-        realfile = parts.join("/");
-      }
-      methods.options[`${realfile}`] = optionsModule;
     }
   }
   const folders = fs.readdirSync(folder);
@@ -176,6 +165,25 @@ async function handleRequest(req: Request): Promise<Response> {
       parsedUrl.pathname.length - 1
     );
   }
+
+  // options request
+    if (userMethod === "options") {
+        for (const middleware of postmiddlewares) {
+          try {
+            await middleware(req, { headers: customHeaders });
+          } catch (error) {
+            console.error(
+                `${chalk.bold.red(
+                    `Error while processing middleware ${middleware.name}:`
+                )} ${error}`
+            );
+            return ServerFailure("Internal Server Error");
+          }
+        }
+        customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+        customHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        return new Response("", { status: 200, headers: customHeaders });
+    }
 
   let matchingRoute: Route | undefined;
 
