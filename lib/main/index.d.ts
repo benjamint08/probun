@@ -3,6 +3,7 @@ import { query } from "../helpers/query.ts";
 import { param } from "../helpers/param.ts";
 import MongoService from "../instances/mongodb.ts";
 import PgService from "../instances/postgres.ts";
+import { json } from "../helpers/json.ts";
 declare class ProBun {
     private port;
     private routes;
@@ -20,4 +21,4 @@ declare class ProBun {
     definePreMiddleware(middleware: any): void;
     definePostMiddleware(middleware: any): void;
 }
-export { ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService, PgService, SendFile, };
+export { ProBun, SendJSON, Success, Failure, ServerFailure, Redirect, Html, query, param, MongoService, PgService, SendFile, json };
