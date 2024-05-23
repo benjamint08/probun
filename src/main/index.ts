@@ -2,21 +2,14 @@ import { Glob } from "bun";
 import * as path from "path/posix";
 import * as fs from "fs";
 import chalk from "chalk";
-import {
-  SendJSON,
-  Success,
-  Failure,
-  ServerFailure,
-  Redirect,
-  Html,
-  SendFile,
-} from "../helpers/helper.ts";
+import { SendJSON, Success, Failure, ServerFailure, Redirect, Html, SendFile } from "../helpers/helper.ts";
+import { Context, type ContextType } from "../helpers/context.ts";
 import { query } from "../helpers/query.ts";
 import { param } from "../helpers/param.ts";
 import { version } from "../../package.json";
 import MongoService from "../instances/mongodb.ts";
 import PgService from "../instances/postgres.ts";
-import {json} from "../helpers/json.ts";
+import { json } from "../helpers/json.ts";
 
 let globalFolder = "";
 
@@ -44,9 +37,7 @@ const postmiddlewares = [] as any;
 
 async function loadFolder(folder: string) {
   if (log) {
-    console.log(
-      `${chalk.bold.white(`Loading`)} ${chalk.bold.green(`${folder}`)}...`
-    );
+    console.log(`${chalk.bold.white(`Loading`)} ${chalk.bold.green(`${folder}`)}...`);
   }
   const allRoutes = new Glob(`${folder}/*.ts`);
   for await (let file of allRoutes.scan(".")) {
@@ -56,16 +47,11 @@ async function loadFolder(folder: string) {
     const splits = file.split("/");
     const filePath = path.join(process.cwd(), folder, file);
     const routeModule = await import(filePath).then((m) => m.default || m);
-    const getModule =
-      typeof routeModule === "object" ? routeModule?.GET : routeModule;
-    const postModule =
-      typeof routeModule === "object" ? routeModule?.POST : routeModule;
-    const putModule =
-      typeof routeModule === "object" ? routeModule?.PUT : routeModule;
-    const deleteModule =
-      typeof routeModule === "object" ? routeModule?.DELETE : routeModule;
-    const patchModule =
-      typeof routeModule === "object" ? routeModule?.PATCH : routeModule;
+    const getModule = typeof routeModule === "object" ? routeModule?.GET : routeModule;
+    const postModule = typeof routeModule === "object" ? routeModule?.POST : routeModule;
+    const putModule = typeof routeModule === "object" ? routeModule?.PUT : routeModule;
+    const deleteModule = typeof routeModule === "object" ? routeModule?.DELETE : routeModule;
+    const patchModule = typeof routeModule === "object" ? routeModule?.PATCH : routeModule;
     file = file.replace(/.ts/g, "");
     if (getModule) {
       if (file.includes("[") && file.includes("]")) {
@@ -122,11 +108,7 @@ async function loadRoutes(folder: string) {
   const start = Date.now();
   await loadFolder(folder);
   if (log) {
-    console.log(
-      `${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(
-        `${Date.now() - start}ms`
-      )}`
-    );
+    console.log(`${chalk.bold.white(`Loaded all routes in`)} ${chalk.bold.green(`${Date.now() - start}ms`)}`);
   }
 }
 
@@ -137,11 +119,7 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
       await middleware(req, { headers: customHeaders });
     } catch (error) {
-      console.error(
-        `${chalk.bold.red(
-          `Error while processing middleware ${middleware.name}:`
-        )} ${error}`
-      );
+      console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
       return ServerFailure("Internal Server Error");
     }
   }
@@ -149,9 +127,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const url = req.url;
   let isIndex = false;
   let parsedUrl = new URL(url ?? "", "http://localhost");
-  let reqMessage = `${chalk.bold.white(userMethod.toUpperCase())} ${
-    parsedUrl.pathname
-  }`;
+  let reqMessage = `${chalk.bold.white(userMethod.toUpperCase())} ${parsedUrl.pathname}`;
   if (parsedUrl.pathname === "/favicon.ico") {
     return new Response("", { status: 204 });
   }
@@ -161,30 +137,23 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 
   if (parsedUrl.pathname.endsWith("/")) {
-    parsedUrl.pathname = parsedUrl.pathname.substring(
-      0,
-      parsedUrl.pathname.length - 1
-    );
+    parsedUrl.pathname = parsedUrl.pathname.substring(0, parsedUrl.pathname.length - 1);
   }
 
   // options request
-    if (userMethod === "options") {
-        for (const middleware of premiddlewares) {
-          try {
-            await middleware(req, { headers: customHeaders });
-          } catch (error) {
-            console.error(
-                `${chalk.bold.red(
-                    `Error while processing middleware ${middleware.name}:`
-                )} ${error}`
-            );
-            return ServerFailure("Internal Server Error");
-          }
-        }
-        customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-        customHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        return new Response("", { status: 200, headers: customHeaders });
+  if (userMethod === "options") {
+    for (const middleware of premiddlewares) {
+      try {
+        await middleware(req, { headers: customHeaders });
+      } catch (error) {
+        console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
+        return ServerFailure("Internal Server Error");
+      }
     }
+    customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    customHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return new Response("", { status: 200, headers: customHeaders });
+  }
 
   let matchingRoute: Route | undefined;
 
@@ -193,8 +162,7 @@ async function handleRequest(req: Request): Promise<Response> {
   } else {
     matchingRoute = methods[userMethod][parsedUrl.pathname.substring(1)];
     if (!matchingRoute) {
-      matchingRoute =
-        methods[userMethod][parsedUrl.pathname.substring(1) + "/index"];
+      matchingRoute = methods[userMethod][parsedUrl.pathname.substring(1) + "/index"];
     }
     if (!matchingRoute) {
       const parts = parsedUrl.pathname.split("/");
@@ -207,9 +175,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
   if (!matchingRoute) {
     if (log) {
-      reqMessage += ` ${chalk.bold.red("404")} ${chalk.bold.gray(
-        `${Date.now() - start}ms`
-      )}`;
+      reqMessage += ` ${chalk.bold.red("404")} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
       console.log(reqMessage);
     }
     return new Response("Not found.", { status: 404 });
@@ -222,11 +188,7 @@ async function handleRequest(req: Request): Promise<Response> {
       try {
         await middleware(req, { headers: customHeaders });
       } catch (error) {
-        console.error(
-          `${chalk.bold.red(
-            `Error while processing middleware ${middleware.name}:`
-          )} ${error}`
-        );
+        console.error(`${chalk.bold.red(`Error while processing middleware ${middleware.name}:`)} ${error}`);
         return ServerFailure("Internal Server Error");
       }
     }
@@ -257,27 +219,17 @@ async function handleRequest(req: Request): Promise<Response> {
   } catch (error) {
     console.error("Error while processing the requested route: ", error);
     if (log) {
-      reqMessage += ` ${chalk.bold.red("500")} ${chalk.bold.gray(
-        `${Date.now() - start}ms`
-      )}`;
+      reqMessage += ` ${chalk.bold.red("500")} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
       console.log(reqMessage);
     }
     return ServerFailure("Internal Server Error");
   }
 }
 
-async function startServer(
-  port: number = 3000,
-  routes: string = "routes",
-  logger: boolean = true
-) {
+async function startServer(port: number = 3000, routes: string = "routes", logger: boolean = true) {
   await loadRoutes(routes);
-  console.log(
-    chalk.bold.white(`Using ProBun ${chalk.bold.green(`v${version}`)}`)
-  );
-  console.log(
-    chalk.bold.white(`Starting server on port ${chalk.bold.cyan(`${port}...`)}`)
-  );
+  console.log(chalk.bold.white(`Using ProBun ${chalk.bold.green(`v${version}`)}`));
+  console.log(chalk.bold.white(`Starting server on port ${chalk.bold.cyan(`${port}...`)}`));
   Bun.serve({
     port,
     fetch: handleRequest,
@@ -291,13 +243,7 @@ class ProBun {
   private mongoUri: any;
   private pgConfig: any;
 
-  constructor(props: {
-    port: number;
-    routes: string;
-    logger: boolean;
-    mongoUri?: any;
-    pgConfig?: any;
-  }) {
+  constructor(props: { port: number; routes: string; logger: boolean; mongoUri?: any; pgConfig?: any }) {
     const { port, routes, logger, mongoUri, pgConfig } = props;
     this.port = port;
     this.routes = routes;
@@ -328,9 +274,7 @@ class ProBun {
   definePostMiddleware(middleware: any) {
     postmiddlewares.push(middleware);
     if (this.logger) {
-      console.log(
-        `Added post-middleware: ${chalk.bold.green(middleware.name)}`
-      );
+      console.log(`Added post-middleware: ${chalk.bold.green(middleware.name)}`);
     }
   }
 }
@@ -348,5 +292,7 @@ export {
   MongoService,
   PgService,
   SendFile,
-  json
+  json,
+  Context,
+  type ContextType,
 };
