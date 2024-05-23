@@ -151,7 +151,7 @@ async function handleRequest(req: Request): Promise<Response> {
       }
     }
     customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-    customHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    customHeaders.set("Access-Control-Allow-Headers", "*");
     if(log){
         reqMessage += ` ${chalk.bold.green("200")} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
         console.log(reqMessage);
