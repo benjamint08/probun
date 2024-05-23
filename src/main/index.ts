@@ -140,6 +140,9 @@ async function handleRequest(req: Request): Promise<Response> {
     parsedUrl.pathname = parsedUrl.pathname.substring(0, parsedUrl.pathname.length - 1);
   }
 
+  customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  customHeaders.set("Access-Control-Allow-Headers", "*");
+
   // options request
   if (userMethod === "options") {
     for (const middleware of premiddlewares) {
@@ -150,8 +153,6 @@ async function handleRequest(req: Request): Promise<Response> {
         return ServerFailure("Internal Server Error");
       }
     }
-    customHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-    customHeaders.set("Access-Control-Allow-Headers", "*");
     if(log){
         reqMessage += ` ${chalk.bold.green("200")} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
         console.log(reqMessage);
