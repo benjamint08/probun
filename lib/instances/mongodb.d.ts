@@ -9,6 +9,7 @@ declare class Mongo {
     find(db: string, col: string, query: any): Promise<any[]>;
     findOne(db: string, col: string, query: any): Promise<any>;
     delete(db: string, col: string, query: any): Promise<any>;
+    deleteMany(db: string, col: string, query: any): Promise<any>;
     close(): Promise<void>;
 }
 declare class MongoService {
