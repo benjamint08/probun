@@ -42,7 +42,7 @@ async function loadFolder(folder: string) {
   const allRoutes = new Glob(`${folder}/*.ts`);
   for await (let file of allRoutes.scan(".")) {
     file = file.replace(/\\/g, "/");
-    let realfile = file.replace(globalFolder + "/", "").replace(/.ts/g, "");
+    let realfile = file.replace(globalFolder + "/", "").replace(".ts", "");
     file = file.split("/")[file.split("/").length - 1];
     const splits = file.split("/");
     const filePath = path.join(process.cwd(), folder, file);
@@ -233,6 +233,13 @@ async function handleRequest(req: Request): Promise<Response> {
 
 async function startServer(port: number = 3000, routes: string = "routes", logger: boolean = true) {
   await loadRoutes(routes);
+  // log routes
+  console.log(chalk.bold.white(`Routes:`));
+    for (const method in methods) {
+        for (const route in methods[method]) {
+        console.log(chalk.bold.white(`  ${method.toUpperCase()} ${chalk.bold.green(route)}`));
+        }
+    }
   console.log(chalk.bold.white(`Using ProBun ${chalk.bold.green(`v${version}`)}`));
   console.log(chalk.bold.white(`Starting server on port ${chalk.bold.cyan(`${port}...`)}`));
   Bun.serve({

@@ -69,6 +69,14 @@ class Mongo {
         return collection.deleteOne(query);
     }
 
+    async deleteMany(db: string, col: string, query: any): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('Not connected to MongoDB');
+        }
+        const collection = await this.getCollection(db, col);
+        return collection.deleteMany(query);
+    }
+
     async close(): Promise<void> {
         await this.client!.close();
     }
