@@ -45,12 +45,16 @@ class Mongo {
         return collection.insertOne(data);
     }
 
-    async find(db: string, col: string, query: any): Promise<any[]> {
+    async find(db: string, col: string, query: any, options: any): Promise<any[]> {
+        let opts = {};
+        if (options) {
+            opts = options;
+        }
         if (!this.isConnected) {
             throw new Error('Not connected to MongoDB');
         }
         const collection = await this.getCollection(db, col);
-        return collection.find(query).toArray();
+        return collection.find(query, options).toArray();
     }
 
     async findOne(db: string, col: string, query: any): Promise<any> {
