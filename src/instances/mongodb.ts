@@ -4,20 +4,32 @@ import chalk from "chalk";
 class Mongo {
     private client: MongoClient | null = null;
     private isConnected: boolean = false;
+    private tryCount: number = 0;
 
     async connect(url: string): Promise<void> {
         this.client = new MongoClient(url);
         const start = Date.now();
         console.log(chalk.bold.whiteBright(`Connecting to MongoDB...`));
-        await this.client.connect().then(() => {
-            console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
-            this.isConnected = true;
-        });
+        try {
+            this.tryCount++;
+            await this.client.connect().then(() => {
+                this.tryCount = 0;
+                console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
+                this.isConnected = true;
+            });
 
-        this.client.on('close', async () => {
-            this.isConnected = false;
-            await this.connect(url);
-        });
+            this.client.on('close', async () => {
+                this.isConnected = false;
+                await this.connect(url);
+            });
+        } catch (e) {
+            console.log(chalk.bold.whiteBright(`MongoDB connection failed in `) + chalk.bold.redBright(`${Date.now() - start}ms`));
+            if (this.tryCount < 5) {
+                await this.connect(url);
+            } else {
+                throw new Error('Failed to connect to MongoDB. Are you sure the URL is correct? 🥲');
+            }
+        }
     }
 
     async getCollection(db: string, col: string): Promise<any> {
