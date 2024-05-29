@@ -13,10 +13,12 @@ ProBun, a better web server for Bun. ProBun aims to enhance your web development
 
 ```typescript
 // routes/index.ts - This will handle localhost:3000/
-import { Success } from "probun";
+import { Context } from "probun";
 
 export async function GET(req: Request): Promise<Response> {
-  return Success("Hello, World!");
+  const c = Context(req)
+
+  return c.json({ hello: "world" });
 }
 ```
 
