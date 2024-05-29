@@ -13,6 +13,11 @@ class Mongo {
             console.log(chalk.bold.whiteBright(`MongoDB connected in `) + chalk.bold.greenBright(`${Date.now() - start}ms`));
             this.isConnected = true;
         });
+
+        this.client.on('close', async () => {
+            this.isConnected = false;
+            await this.connect(url);
+        });
     }
 
     async getCollection(db: string, col: string): Promise<any> {
