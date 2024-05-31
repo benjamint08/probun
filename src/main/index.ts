@@ -153,10 +153,6 @@ async function handleRequest(req: Request): Promise<Response> {
         return ServerFailure("Internal Server Error");
       }
     }
-    if(log){
-        reqMessage += ` ${chalk.bold.green("200")} ${chalk.bold.gray(`${Date.now() - start}ms`)}`;
-        console.log(reqMessage);
-    }
     return new Response("", { status: 200, headers: customHeaders });
   }
 
